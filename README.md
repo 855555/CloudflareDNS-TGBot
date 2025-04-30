@@ -50,10 +50,14 @@ npm install
 ```env
 BOT_TOKEN=your-telegram-bot-token-here
 CLOUDFLARE_API_TOKEN=your-cloudflare-api-token-here
-ALLOWED_USERS=123456789  # 多用户用逗号隔开
+ALLOWED_USERS=123456789  # tg user id 多用户用逗号隔开
 ```
 
 确保将 `your-telegram-bot-token-here` 和 `your-cloudflare-api-token-here` 替换为实际的 Telegram Bot Token 和 Cloudflare API Token。
+
+* [✈️ 如何获得 telegram-bot-token？](https://github.com/Venompool888/CloudflareDNS-TGBot/tree/main?tab=readme-ov-file#%EF%B8%8F-%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97-telegram-bot-token)
+* [☁️ 如何获得 cloudflare-api-token？](https://github.com/Venompool888/CloudflareDNS-TGBot/tree/main?tab=readme-ov-file#%EF%B8%8F-%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97-cloudflare-api-token)
+* [👤 如何获得 telegram-user-id？]()
 
 ## 步骤 6: 启动项目
 
@@ -107,6 +111,16 @@ npm run dev
   > ⚠️注意：此页面只能显示一次，关闭此页面后将不会再次显示
   
   ![image](https://github.com/user-attachments/assets/2c8a4111-5642-4cb0-b13e-e7277707d291)
+
+### 👤 如何获得 telegram-user-id？
+* 搜索或直接访问[https://t.me/userinfobot](https://t.me/userinfobot)
+  可以直接获得你自己的 user id
+  ![image](https://github.com/user-attachments/assets/e2d532c1-6e99-44e5-8569-3c1b1399f8c1)
+
+
+* 部分第三方菜 telegram 客户端可以直接获得别的用户的 user id (这里使用的是 [Nekogram](https://nekogram.app/) )
+  ![image](https://github.com/user-attachments/assets/86281e1d-e8c9-4319-8e9e-c39d2fc87f9b)
+
 
 ---
 
