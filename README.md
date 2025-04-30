@@ -45,7 +45,7 @@ npm install
 
 ## 步骤 5: 配置环境变量
 
-在项目根目录下创建一个 `.env` 文件，并根据以下模板填写内容：
+在项目根目录下创建一个 `.env` 文件（如果已经有了，就直接打开），并根据以下模板填写内容：
 
 ```env
 BOT_TOKEN=your-telegram-bot-token-here
