@@ -75,16 +75,45 @@ npm run dev
 
 ---
 
-## 常见问题
+## 🧩额外补充
 
-### 1. 如何获取 Telegram Bot Token？
-请参考 [Telegram BotFather](https://core.telegram.org/bots#botfather) 的官方文档，创建一个新的机器人并获取 Token。
+### ✈️ 如何获得 telegram-bot-token？
 
-### 2. 如何获取 Cloudflare API Token？
-登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)，进入 **My Profile**，在 **API Tokens** 页面创建一个具有 Zone 权限的 Token。
+* 搜索或直接访问 [https://t.me/BotFather](https://t.me/BotFather)  
+![image](https://github.com/user-attachments/assets/cd4c71d0-094b-4be8-91fa-7126c23148e0)  
 
-### 3. 启动时报错 `Error: Missing API Token`
-请检查 `.env` 文件是否正确配置，并确保 `CLOUDFLARE_API_TOKEN` 已填写。
+* 使用 `/newbot` 创建一个新的机器人  
+![image](https://github.com/user-attachments/assets/bdd5fcb8-9028-4e7a-b0f0-0e3690b5df4b)
+
+* 依次输入`机器人的昵称`和`user name`, 然后复制`bot_token`
+![image](https://github.com/user-attachments/assets/6431b548-b2fb-48c4-bbdd-02638639df92)
+
+### ☁️ 如何获得 cloudflare-api-token？
+
+* 访问 [https://dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens)
+* 点击 `创建令牌`
+  ![image](https://github.com/user-attachments/assets/e6998060-da89-489d-a405-4f51a6fd677a)
+
+* 选择 `编辑区域 DNS`
+  ![image](https://github.com/user-attachments/assets/0094eba2-fe4b-4f31-ac1a-6d0f8ed7e689)
+
+* 选择 `所有区域`, 然后点击 `继续以显示摘要`
+  ![image](https://github.com/user-attachments/assets/140e69b2-53a0-4ddf-82ce-c237c3b2dd97)
+
+* 点击 `创建令牌`
+  ![image](https://github.com/user-attachments/assets/5d0920c9-e321-49ec-84e8-afaa4144e1b5)
+
+* 点击 `Copy`
+  > ⚠️注意：此页面只能显示一次，关闭此页面后将不会再次显示
+  
+  ![image](https://github.com/user-attachments/assets/2c8a4111-5642-4cb0-b13e-e7277707d291)
 
 ---
+
+  
+
+
+
+
+
 
