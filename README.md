@@ -1,5 +1,5 @@
 # CloudflareDNS-TGBot
-
+[1Panel部署请点这里](https://github.com/Venompool888/CloudflareDNS-TGBot/blob/main/1panel-readme.md)
 
 在 Linux 系统中，使用以下命令来安装 Git：
 
