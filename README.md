@@ -57,7 +57,7 @@ ALLOWED_USERS=123456789  # tg user id 多用户用逗号隔开
 
 * [✈️ 如何获得 telegram-bot-token？](https://github.com/Venompool888/CloudflareDNS-TGBot/tree/main?tab=readme-ov-file#%EF%B8%8F-%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97-telegram-bot-token)
 * [☁️ 如何获得 cloudflare-api-token？](https://github.com/Venompool888/CloudflareDNS-TGBot/tree/main?tab=readme-ov-file#%EF%B8%8F-%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97-cloudflare-api-token)
-* [👤 如何获得 telegram-user-id？]()
+* [👤 如何获得 telegram-user-id？](https://github.com/Venompool888/CloudflareDNS-TGBot/blob/main/README.md#-%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97-telegram-user-id)
 
 ## 步骤 6: 启动项目
 
