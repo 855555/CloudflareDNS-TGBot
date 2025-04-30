@@ -13,7 +13,7 @@ const {
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const sessions = {};
 const allowedUsers = process.env.ALLOWED_USERS
-  ? process.env.ALLOWED_USERS.split(',').map(id => id.trim())
+  ? process.env.ALLOWED_USERS.split(',').map(id => Number(id.trim()))
   : [];
 
 console.log('✅ Bot 已启动，允许访问的用户 ID:', allowedUsers);
