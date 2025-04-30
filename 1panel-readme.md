@@ -1,5 +1,5 @@
 # CloudflareDNS-TGBot（1Panel部署教程）
-
+![image](https://github.com/user-attachments/assets/dbbe3d73-2555-4fec-bc38-39a3c51fd397)
 
 在 Linux 系统中，使用以下命令来安装 Git：
 
