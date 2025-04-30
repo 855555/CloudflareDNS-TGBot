@@ -36,3 +36,9 @@ cd CloudflareDNS-TGBot
 
 ## 步骤 6：✏️填写名称➡️选择源码目录➡️
 ![image](https://github.com/user-attachments/assets/e831d4d8-e44f-4d6b-8a43-9fefbd5485b7)
+
+## 步骤 7：✅启动！
+![image](https://github.com/user-attachments/assets/cd68eea2-7417-4a23-8a3f-b3088fb16f3e)
+![image](https://github.com/user-attachments/assets/79b90c54-242b-4cb6-987f-0d9c2dbc1e14)
+
+
