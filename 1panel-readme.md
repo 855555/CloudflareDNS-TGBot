@@ -11,7 +11,6 @@ sudo apt update
 sudo apt install git -y
 ```
 
-> 提示：这可能会花点时间，尤其是在性能不太突出的 VPS 上。
 
 ## 步骤 2: 检验安装是否成功
 
