@@ -128,7 +128,8 @@ bot.action('list_records', async (ctx) => {
         const name = escapeMarkdownV2(record.name);
         const type = escapeMarkdownV2(record.type);
         const content = escapeMarkdownV2(record.content);
-        return `${index + 1}\\) ${name} \\(${type}\\): ${content}`;
+        const proxied = record.proxied ? '代理：✅' : '代理：❌';
+        return `${index + 1}\\) ${name} ${proxied} \\(${type}\\): ${content}`;
       }).join('\n');
 
       ctx.reply(`域名 \`${escapeMarkdownV2(domain)}\` 的所有记录：\n\`\`\`\n${recordList}\`\`\``, { parse_mode: 'MarkdownV2',
