@@ -135,7 +135,8 @@ bot.action('list_records', async (ctx) => {
     ...Markup.inlineKeyboard([
         Markup.button.callback('➕ 添加记录', 'add_record'),
         Markup.button.callback('✏️ 修改记录', 'modify_records'),
-        Markup.button.callback('💣 删除记录', 'delete_records')
+        Markup.button.callback('💣 删除记录', 'delete_records'),
+        Markup.button.callback('☁️ 修改代理状态', 'switch_proxy_status')
         ], { columns: 2 })
       });
     })
@@ -143,6 +144,42 @@ bot.action('list_records', async (ctx) => {
       console.error('列出记录时出错:', error);
       ctx.reply('列出记录时出错，请稍后再试。');
     });
+});
+
+// 修改代理状态
+bot.action('switch_proxy_status', async (ctx) => {
+  const chatId = ctx.chat.id;
+  const session = sessions[chatId];
+
+  if (!session || !session.selectedDomain) {
+    return await ctx.reply('请先选择一个域名。');
+  }
+
+  // 获取该域名下的所有记录
+  await ctx.answerCbQuery();
+
+  const domain = session.selectedDomain;
+  const zoneId = session.zones[domain];
+
+  const records = await listDNSRecords(zoneId); // 假设你有这个方法列出所有记录
+  if (records.length === 0) {
+    return await ctx.reply('该域名没有任何记录，请先添加记录。', {
+      ...Markup.inlineKeyboard([
+        Markup.button.callback('➕ 添加记录', 'add_record')
+      ], { columns: 1 })
+    });
+  };
+
+  session.modifyCandidates = records; // 临时保存所有记录
+  session.step = 'awaiting_switch_proxy_status_index'; // 进入等待输入序号状态
+
+  // 回复并列出记录按钮
+  await ctx.reply(`请选择要\*\*修改代理状态\*\*的记录\\(输入序号\\)：`, {
+    parse_mode: 'MarkdownV2'
+  });
+
+
+
 });
 
 // 删除记录
@@ -548,6 +585,70 @@ bot.on('text', async (ctx) => {
       ], { columns: 1 })
     });
   };
+
+  // 处理代理状态修改
+  if (session.step === 'awaiting_switch_proxy_status_index') {
+    const index = parseInt(ctx.message.text.trim());
+    const records = session.modifyCandidates;
+    const domain = session.selectedDomain;
+    const zoneId = session.zones[domain];
+
+    if (isNaN(index) || index < 1 || index > records.length) {
+      return await ctx.reply('❌ 无效的序号，请输入 1 到 ' + records.length + ' 之间的数字。');
+    }
+
+    const record = records[index - 1];
+    newproxied = !record.proxied; // 反转当前的代理状态
+
+    try {
+      await updateDNSRecord(zoneId, record.id, {
+        type: record.type,
+        name: record.name,
+        content: record.content,
+        ttl: record.ttl,
+        proxied: newproxied
+      });
+
+      await ctx.reply('✅ 修改成功！');
+
+      // 格式化成功记录详情
+      const successLog = `记录名称: ${record.name}\n记录类型: ${record.type}\n新值: ${record.content}\nTTL: ${record.ttl}\n代理: ${newproxied ? '启用' : '未启用'}`;
+
+      await ctx.reply(`\`\`\`\n${successLog}\n\`\`\``, {
+        parse_mode: 'MarkdownV2'
+      });
+
+
+
+    } catch (err) {
+      console.error('修改失败：', err);
+      await ctx.reply('❌ 修改失败，请稍后再试。');
+    
+      // 如果包含 Cloudflare 错误详情
+      if (err.details && Array.isArray(err.details)) {
+        const messages = err.details.map((e, i) => {
+          const code = e.code ?? '未知代码';
+          const message = e.message ?? '未知错误';
+          return `#${i + 1}\n代码: ${code}\n信息: ${message}`;
+        }).join('\n\n');
+    
+        // 用 MarkdownV2 代码块格式发给用户
+        await ctx.reply(`\`\`\`\n${messages}\n\`\`\``, {
+          parse_mode: 'MarkdownV2'
+        });
+      } else {
+        // 如果没有 .details，就显示 err.message
+        await ctx.reply(`\`\`\`\n${err.message || '未知错误'}\n\`\`\``, {
+          parse_mode: 'MarkdownV2'
+        });
+      };
+
+    };
+    
+    // 清除 session
+    delete session.step;
+  };
+  
 });
 
 // 用户确认删除记录
