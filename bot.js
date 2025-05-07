@@ -23,13 +23,13 @@ const escapeMarkdownV2 = (text) => {
 };
 
 // 权限验证
-bot.use(async (ctx, next) => {
-  const chatId = ctx.chat.id;
-  if (!allowedUsers.includes(chatId)) {
-    return await ctx.reply('抱歉，您没有权限使用此Bot。');
-  }
-  await next();
-});
+// bot.use(async (ctx, next) => {
+//   const chatId = ctx.chat.id;
+//   if (!allowedUsers.includes(chatId)) {
+//     return await ctx.reply('抱歉，您没有权限使用此Bot。');
+//   }
+//   await next();
+// });
 
 // /start 命令
 bot.start(async (ctx) => {
@@ -189,7 +189,7 @@ bot.action('delete_records', async (ctx) => {
   const session = sessions[chatId];
 
   if (!session || !session.selectedDomain) {
-    return await ctx.reply('请先选择一个域名。');
+    return await ctx.reply('请先选择一个(或多个)域名。');
   }
 
   // 获取该域名下的所有记录
@@ -501,26 +501,28 @@ bot.on('text', async (ctx) => {
 
   // 删除记录
   if (session.step === 'awaiting_delete_index') {
-    const index = parseInt(ctx.message.text.trim());
+    const inputText = ctx.message.text.trim();
+    const indexes = inputText.split(/\s+/).map(num => parseInt(num)).filter(num => !isNaN(num));
     const records = session.deleteCandidates;
 
-    if (isNaN(index) || index < 1 || index > records.length) {
-      return await ctx.reply(`❌ 无效的序号，请输入 1 到 ${records.length} 之间的数字。`);
+    if (indexes.length === 0 || indexes.some(index => index < 1 || index > records.length)) {
+      return await ctx.reply(`❌ 无效的序号，请输入 1 到 ${records.length} 之间的数字，用空格分隔多个。`);
     }
 
-    const targetRecord = records[index - 1];
-    session.recordToDelete = targetRecord;
+    const targets = indexes.map(index => records[index - 1]);
+    session.recordsToDelete = targets;
     session.step = 'awaiting_delete_confirm';
 
+    const preview = targets.map((record, i) => 
+      `\\#${indexes[i]} 📛 名称：\`${escapeMarkdownV2(record.name)}\`\n📄 类型：\`${escapeMarkdownV2(record.type)}\`\n🔗 值：\`${escapeMarkdownV2(record.content)}\`\n`
+    ).join('\n');
+
     await ctx.reply(
-      `⚠️ 你确定要删除以下记录吗？\n\n` +
-      `📛 名称：\`${escapeMarkdownV2(targetRecord.name)}\`\n` +
-      `📄 类型：\`${escapeMarkdownV2(targetRecord.type)}\`\n` +
-      `🔗 值：\`${escapeMarkdownV2(targetRecord.content)}\``,
+      `⚠️ 你确定要删除以下记录吗？\n\n${preview}`,
       {
         parse_mode: 'MarkdownV2',
         ...Markup.inlineKeyboard([
-          Markup.button.callback('✅ 确认删除', 'confirm_delete'),
+          Markup.button.callback('✅ 确认批量删除', 'confirm_delete'),
           Markup.button.callback('❌ 取消', 'cancel_delete')
         ])
       }
@@ -657,48 +659,56 @@ bot.action('confirm_delete', async (ctx) => {
   const chatId = ctx.chat.id;
   const session = sessions[chatId];
 
-  if (!session || !session.recordToDelete || !session.selectedDomain) {
+  if (!session || !session.recordsToDelete || !session.selectedDomain) {
     return await ctx.reply('⚠️ 无法执行删除操作，请重新开始流程。');
   }
 
   const zoneId = session.zones[session.selectedDomain];
-  const record = session.recordToDelete;
+  const records = session.recordsToDelete;
 
-  try {
-    // 执行删除操作
-    await deleteDNSRecord(zoneId, record.id);
+  await ctx.answerCbQuery(); // 先关闭按钮的 loading 状态
 
-    // 删除成功，显示详细信息
-    const recordDetails = `记录名称: ${record.name}\n记录类型: ${record.type}\n记录值: ${record.content}\nTTL: ${record.ttl}\n代理: ${record.proxied ? '启用' : '未启用'}`;
-    await ctx.reply('✅ 记录已成功删除！');
-    await ctx.reply(`被删除的记录：\`\`\`\n${recordDetails}\n\`\`\``, { parse_mode: 'MarkdownV2' });
+  await ctx.reply(`🚀 正在批量删除 ${records.length} 条记录，请稍候...`);
 
-  } catch (err) {
-    console.error('删除记录失败:', err);
-    await ctx.reply('❌ 删除记录失败，请稍后重试。');
-    
-    // 如果有错误详情
-    if (err.details && Array.isArray(err.details)) {
-      const errorMessages = err.details.map((e, i) => {
-        return `#${i + 1}\n代码: ${e.code}\n信息: ${e.message}`;
-      }).join('\n\n');
+  const results = await Promise.allSettled(
+    records.map(record => deleteDNSRecord(zoneId, record.id))
+  );
 
-      await ctx.reply(`\`\`\`\n${errorMessages}\n\`\`\``, { parse_mode: 'MarkdownV2' });
+  let successCount = 0;
+  let failedDetails = [];
+
+  results.forEach((result, idx) => {
+    const record = records[idx];
+    if (result.status === 'fulfilled') {
+      successCount++;
     } else {
-      await ctx.reply(`\`\`\`\n${err.message || '未知错误'}\n\`\`\``, { parse_mode: 'MarkdownV2' });
-    };
+      failedDetails.push({
+        name: record.name,
+        type: record.type,
+        content: record.content,
+        error: result.reason?.message || '未知错误'
+      });
+    }
+  });
 
+  // 汇总信息
+  let summary = `✅ 成功删除 ${successCount} 条记录。`;
 
-  };
-  
-  await ctx.answerCbQuery(); // 关闭按钮 loading 状态
+  if (failedDetails.length > 0) {
+    summary += `\n\n❌ 失败 ${failedDetails.length} 条：\n`;
+    failedDetails.forEach((fail, i) => {
+      summary += `\n#${i + 1} 名称：\`${escapeMarkdownV2(fail.name)}\` 类型：\`${escapeMarkdownV2(fail.type)}\`\n错误：\`${escapeMarkdownV2(fail.error)}\`\n`;
+    });
+  }
 
-  
+  await ctx.reply(summary, { parse_mode: 'MarkdownV2' });
 
   // 清除 session
   delete session.step;
-  delete session.recordToModify;
+  delete session.recordsToDelete;
 });
+
+
 
 // 用户取消删除
 bot.action('cancel_delete', async (ctx) => {
