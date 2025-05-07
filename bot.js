@@ -189,7 +189,7 @@ bot.action('delete_records', async (ctx) => {
   const session = sessions[chatId];
 
   if (!session || !session.selectedDomain) {
-    return await ctx.reply('请先选择一个(或多个)域名。');
+    return await ctx.reply('请先选择一个(或多个)域名。多个域名序号用空格分开');
   }
 
   // 获取该域名下的所有记录
