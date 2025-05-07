@@ -2,15 +2,13 @@ version: '3.8'
 
 services:
   CloudflareDNS-TGBot:
-    build: .
+    image: venompool/cloudflaredns-tgbot:latest
     container_name: CloudflareDNS-TGBot
     restart: always
     environment:
-      - BOT_TOKEN=
-      - CLOUDFLARE_API_TOKEN=  
-      - ALLOWED_USERS=     #123456789
-    volumes:
-      - .:/app
+      - BOT_TOKEN=你的BotToken
+      - CLOUDFLARE_API_TOKEN=你的CFToken
+      - ALLOWED_USERS=123456789
     networks:
       - tgnet
 
