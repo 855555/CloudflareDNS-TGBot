@@ -23,13 +23,13 @@ const escapeMarkdownV2 = (text) => {
 };
 
 // 权限验证
-// bot.use(async (ctx, next) => {
-//   const chatId = ctx.chat.id;
-//   if (!allowedUsers.includes(chatId)) {
-//     return await ctx.reply('抱歉，您没有权限使用此Bot。');
-//   }
-//   await next();
-// });
+ bot.use(async (ctx, next) => {
+   const chatId = ctx.chat.id;
+   if (!allowedUsers.includes(chatId)) {
+     return await ctx.reply('抱歉，您没有权限使用此Bot。');
+   }
+   await next();
+ });
 
 // /start 命令
 bot.start(async (ctx) => {
