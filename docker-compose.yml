@@ -3,7 +3,7 @@ version: '3.8'
 services:
   CloudflareDNS-TGBot:
     build: .
-    container_name: telegram-bot
+    container_name: CloudflareDNS-TGBot
     restart: always
     environment:
       - BOT_TOKEN=
