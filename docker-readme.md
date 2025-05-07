@@ -5,8 +5,9 @@ yml下载命令：
   wget -O docker-compose-cftg.yml 'https://raw.githubusercontent.com/Venompool888/CloudflareDNS-TGBot/refs/heads/main/docker-compose-cftg.yml'
 
   ```
-填写好相应内容
-![image](https://github.com/user-attachments/assets/2b68d683-f94a-449a-8b7d-d546b7744e66)
+填写好相应内容  
+![image](https://github.com/user-attachments/assets/f7b1b179-77c5-4fd7-99a2-ea7e0747f618)
+
 
 运行
 ```
