@@ -2,6 +2,7 @@
 ![image](https://github.com/user-attachments/assets/dbbe3d73-2555-4fec-bc38-39a3c51fd397)
 
 [1Panel部署请点这里](https://github.com/Venompool888/CloudflareDNS-TGBot/blob/main/1panel-readme.md)
+[Docker部署请点这里](https://github.com/Venompool888/CloudflareDNS-TGBot/blob/main/docker-readme.md)
 
 在 Linux 系统中，使用以下命令来安装 Git：
 
