@@ -11,7 +11,7 @@ yml下载命令：
 
 运行
 ```
-docker compose -f cftg.yml up -d
+docker compose -f docker-compose-cftg.yml up -d
 
 ```
 
