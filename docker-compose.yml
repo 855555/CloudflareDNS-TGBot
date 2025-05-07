@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  telegram-bot:
+    build: .
+    container_name: telegram-bot
+    restart: always
+    environment:
+      - BOT_TOKEN=
+      - CLOUDFLARE_API_TOKEN=  
+      - ALLOWED_USERS=     #123456789
+    volumes:
+      - .:/app
+    networks:
+      - tgnet
+
+networks:
+  tgnet:
+    driver: bridge
